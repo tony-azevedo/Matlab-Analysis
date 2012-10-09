@@ -5,7 +5,8 @@ sources = context.getSources();
 
 %%
 
-fprintf('\n -- Context Projects: \n\n');
+fprintf('\n -- %d Context Projects\n\n',length(projects))
+
 for p = 1:length(projects)
     fprintf('%s\n',char(projects(p).getName))
     tags = projects(p).getTags;
