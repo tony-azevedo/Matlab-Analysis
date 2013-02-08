@@ -1,7 +1,7 @@
 function [x_out,y_out] = rectangularizeXYCellsOfMats(x,y)
 
-xmin = -Inf;
-xmax = Inf;
+xmin = Inf;
+xmax = -Inf;
 for c = 1:length(x)
     xmin = max(xmin,min(x{c}));
     xmax = min(xmax,max(x{c}));
