@@ -103,7 +103,7 @@ c = flipud(c);
 
 %% Make a stimulus envelope
 alpha = 0;
-N = 100000;
+N = 10000;
 samprate = 10000;
 nfft = 2^nextpow2(N);
 tau = 50;
@@ -162,11 +162,11 @@ env = 10.^(mu + sig*env_pre);
 stim = powernoise(alpha, N, 'randpower', 'normalize');
 stim = stim-mean(stim);
 
-% choose a pure tone carrier
-% t = (1:N)'/samprate;
-% f = 1000;
-% stim = sin(f*t + 2*pi*(rand(1)-.5));
-% stim = stim-mean(stim);
+% choose a pure tone carrier with random phase
+t = (1:N)'/samprate;
+f = 1000;
+stim = sin(f*t + 2*pi*(rand(1)-.5));
+stim = stim-mean(stim);
 
 stim = env.*stim;
 
