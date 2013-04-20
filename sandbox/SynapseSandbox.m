@@ -1,9 +1,7 @@
 %% Rework in terms of Fre AchC
 % Synapse model? Simplified. for Kathy
 
-ex = 0;
-
-% Ach concentration at receptors
+% Ach in vesicles
 Ach_per_ves =  10000;
 
 % vesicle release dynamics
@@ -48,7 +46,7 @@ N_a = ones(size(t)); N_a = N_a*N_0; % channels available
 % binding (Ach+N_o - )
 b = ones(size(t));
 
-bolus = 500;  % spikes
+bolus = 5;  % spikes
 start = 0;
 finit = 500; % duration
 amp = bolus/(finit-start); % spikes/ms
@@ -119,3 +117,73 @@ ylabel('N_a - Channels free');
 % subplot(3,2,2);
 % plot(t,cumsum(I)*tstep), axis tight;
 % ylabel('I');
+
+
+% % Set the initial conditions 
+% Xo = [b;c];
+% % Define the time span over which to execute the model 
+% tspan = 0:1:99;
+% % Implementation of u1 and u2 within the model
+% n = length (tspan);
+% for a=1:n;
+%      if(tspan(a))
+%         u1 = U1(a);
+%         u2 = U2(a);
+%         [t,X] = ode45(@Store_1,tspan,Xo,[],u1,u2,T1);
+%      end
+% end
+% % Output
+% Store1 = [t X(:,1) X(:,2)];
+% 
+% % System of Equations
+% % dx1/dt = (u1 - x1)/T
+% % dx2/dt = ((u1*u2) - (x1*x2))/(T*x1)
+% function [dx_dt]= Store_1(t,x,u1,u2,T1)
+% % System of Differential Equations
+% dx_dt(1) = (u1 - x(1))/T1;
+% dx_dt(2) = ((u1*u2) -(x(1)*x(2)))/(T1*x(1));
+% % Collect derivatives into a column vector
+% dx_dt = dx_dt';
+% return
+% 
+% 
+% 
+% 
+% > I have attempted to do this by using a For loop and If statement to assign 
+% > constant value to the input variables u1 and u2 at each time step selected 
+% > from two vectors, U1 and U2.
+% > The code executes in MATLAB and generates outputs however the results do 
+% > not appear to be correct.
+% > If someone could review the code to check that my for and if statements 
+% > are correct it would be greatly appreciated.
+% > Thank you for your time,
+% > Sarah
+% >
+% > function [Store1] = ModelS1(Inputs, T1, b, c)
+% > % Define Store input time series U1 = Inputs(:,1);
+% > U2 = Inputs(:,2);
+% > % Set the initial conditions Xo = [b;c];
+% > % Define the time span over which to execute the model tspan = 0:1:99;
+% > % Implementation of u1 and u2 within the model
+% > n = length (tspan);
+% 
+% This looks off to me. You shouldn't care about the length of the tspan 
+% vector here; you should care about how many pairs of u1 and u2 parameters 
+% you have to process.
+% 
+% for whichparams = 1:size(Inputs, 1)
+%     u1 = Inputs(whichparam, 1);
+%     u2 = Inputs(whichparam, 2);
+%     % I would also suggest using an anonymous function
+%     [t, X] = ode45(@(t, y) Store_1(t, y, u1, u2), tspan, Xo);
+%     % Do something with this parameter value's t and X output from ODE45
+% end
+% 
+% If instead you're using u1 and u2 as time-varying parameters, so your 
+% equations are:
+% 
+% y' = f(t, y(t), u1(t), u2(t))
+% 
+% then you will need to pass ALL of U1 and U2 into your ODE function so you 
+% can interpolate it for time values at which you don't have an actual value. 
+% Use INTERP1 for this.
