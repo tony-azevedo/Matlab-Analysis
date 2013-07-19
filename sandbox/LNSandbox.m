@@ -106,7 +106,7 @@ alpha = 0;
 N = 10000;
 samprate = 10000;
 nfft = 2^nextpow2(N);
-tau = 50;
+tau = 25;
 
 % choose a white noise stimulus
 stim = powernoise(alpha, N, 'randpower', 'normalize');
@@ -133,6 +133,12 @@ env = env(1:N);
 % pink
 
 figure(1)
+redlines = findobj(1,'Color',[1, 0, 0]);
+set(redlines,'color',[1 .8 .8]);
+bluelines = findobj(1,'Color',[0, 0, 1]);
+set(bluelines,'color',[.8 .8 1]);
+
+
 subplot(4,1,1);
 plot(stim)
 
@@ -164,8 +170,8 @@ stim = stim-mean(stim);
 
 % choose a pure tone carrier with random phase
 t = (1:N)'/samprate;
-f = 1000;
-stim = sin(f*t + 2*pi*(rand(1)-.5));
+f = 150;
+stim = sin(f*2*pi*t + 2*pi*(rand(1)-.5));
 stim = stim-mean(stim);
 
 stim = env.*stim;
@@ -174,7 +180,7 @@ figure(1)
 plot(env,'r'); hold on
 plot(stim); hold off
 
-%sound(stim)
+sound(stim)
 
 %% generate neural response
 
