@@ -1,0 +1,27 @@
+#pragma rtGlobals=1  // Use modern global access method.
+
+Macro FormatGraph()
+ModifyGraph fSize=18,font="Palatino"
+ModifyGraph tick=2,nticks=3,manTick=0
+ModifyGraph axisEnab(left)={0.05,1},axisEnab(bottom)={0.05,1}
+ModifyGraph margin(left)=72,margin(bottom)=54,margin(top)=18,margin(right)=18
+End
+
+Macro SplitWaveIntoSections(OriginalWave, SectionLength, BaseName)
+string OriginalWave
+variable SectionLength
+string BaseName
+variable numpts = numpnts($OriginalWave)
+variable numsections = numpts/sectionlength
+variable cnt = 0;
+string NewWaveName
+Silent 1; PauseUpdate
+do
+NewWaveName = BaseName + num2str(cnt)
+make/o/n=(SectionLength) $NewWaveName
+$NewWaveName[0,SectionLength] = $OriginalWave[cnt*SectionLength + p]
+cnt = cnt + 1
+while (cnt < numsections)
+end
+
+#pragma rtGlobals=1 // Use modern global access method.
