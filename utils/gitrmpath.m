@@ -1,6 +1,6 @@
 %% .svn folder removal script
 pathstr = path;
-if strcmp(computer('arch'),'win32')
+if strcmp(computer('arch'),'win32') || strcmp(computer('arch'),'win64')
     colons = strfind(pathstr,';');
     colons = [0,colons,length(colons)+1];
 else
