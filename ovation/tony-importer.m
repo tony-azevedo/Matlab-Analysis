@@ -52,7 +52,7 @@ end
 %% Create the Sources used during the PiezoSine epochs
 % Creating top-level sources are easy - one line
 
-sourceParent = context.insertSource('Fly', '1');
+sourceParent = context.insertSource('genotype', 'pJFRC7/pJFRC7;VT30609-Gal4/VT30609-Gal4');
 
 % Creating children sources are more work. This is because we want to store
 % any relevant information about the generation of that Source. For
