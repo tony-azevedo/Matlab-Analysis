@@ -2,7 +2,7 @@
 % need source
 import ovation.*;
 
-context = NewDataContext('Anthony_Azevedo@hms.harvard.edu');
+context = NewDataContext('anthony_azevedo@hms.harvard.edu');
 
 % project = context.insertProject('AMMC-B1 neurons', 'Function, connectivity, mechanisms of sound encoding in B1 neurons', datetime(2013,4,3,8,0,0));
 project = context.getObjectWithURI('ovation://a3c4c68c-6993-4223-8c3e-076add7badd6/');
@@ -21,10 +21,12 @@ genotypeSource = context.getObjectWithURI('ovation://8ae6267b-28e3-4e0e-afe6-6b2
 % We will create a protocol for the Source generation epoch, and the piezoSine EpochGroup.
 % Need to make these for all Protocols
 
+ovationProtocol = context.getProtocol('PiezoSine');
+
 protocols = what('FlySoundProtocols');
 for p = 1:length(protocols.m)
     protocol = protocols.m{p};
-    piezoSineProtocol = context.getProtocol('PiezoSine.131205');
+    ovationProtocol = context.getProtocol('PiezoSine');
     if(isempty(piezoSineProtocol))
         piezoSineProtocol = context.insertProtocol('PiezoSine.131205', 'Move antenna with Sine wave');
     end
@@ -178,3 +180,9 @@ piezoSineEpoch.insertNumericMeasurement(name,...
 % TA: what should the device names be ("Piezo Actuator" or more specific "Physik Instrumente P840.20"?
 % TA: what are typical device params like?
 % TA: woah!  This didn't work!  cause a bunch of errors
+
+
+%% deleting
+toDelete = context.getObjectWithURI('ovation://6f145bc3-9802-448f-83af-b0430948ffe2/');
+
+
