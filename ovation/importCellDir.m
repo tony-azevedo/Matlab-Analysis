@@ -6,17 +6,22 @@ context = NewDataContext('anthony_azevedo@hms.harvard.edu');
 
 % project = context.insertProject('AMMC-B1 neurons', 'Function, connectivity, mechanisms of sound encoding in B1 neurons', datetime(2013,4,3,8,0,0));
 project = context.getObjectWithURI('ovation://a3c4c68c-6993-4223-8c3e-076add7badd6/');
+% project.getName, project.getPurpose
 
+%%
 % genotypeSource = context.insertSource('genotype', ';pJFRC7/pJFRC7;VT30609-Gal4/VT30609-Gal4');
 genotypeSource = context.getObjectWithURI('ovation://4d204c8b-a272-43f0-9dc2-259625b10518/');
+% genotypeSource.getLabel, genotypeSource.getIdentifier
 
 % genotypeSource = context.insertSource('genotype', 'GH86-Gal4/GH86-Gal4;pJFRC7/pJFRC7;;');
 genotypeSource = context.getObjectWithURI('ovation://8ae6267b-28e3-4e0e-afe6-6b2b528d4b4d/');
+% genotypeSource.getLabel, genotypeSource.getIdentifier
 
 % need to get the genotype from the acq struct, even if I fuck it up, find
 % a close enough match
 
-% Create two protocols. 
+%%
+% Create protocols. 
 % Protocols are optional, and can be attached at any point on the TimelineElement hierarchy (Experiments, EpochGroups, Epochs). 
 % We will create a protocol for the Source generation epoch, and the piezoSine EpochGroup.
 % Need to make these for all Protocols
@@ -26,13 +31,23 @@ ovationProtocol = context.getProtocol('PiezoSine');
 protocols = what('FlySoundProtocols');
 for p = 1:length(protocols.m)
     protocol = protocols.m{p};
+<<<<<<< HEAD
     ovationProtocol = context.getProtocol('PiezoSine');
     if(isempty(piezoSineProtocol))
         piezoSineProtocol = context.insertProtocol('PiezoSine.131205', 'Move antenna with Sine wave');
+=======
+    helpstr = help(protocol);
+    ovProtocol = context.getProtocol(protocol);
+    if(isempty(ovProtocol))
+        ovProtocol = context.insertProtocol(protocol, helpstr);
+>>>>>>> ovation import
     end
+    ovProtocol.getName
+    ovProtocol.getProtocolDocument
     
 end
 
+%%
 female3doFlyGenerationProtocol = context.getProtocol('Female, 3do');
 if(isempty(flyGenerationProtocol))
     flyGenerationProtocol = context.insertProtocol(...
@@ -45,9 +60,20 @@ cellGenerationProtocol = context.getProtocol('Cock-eyed Prep');
 if(isempty(cellGenerationProtocol))
     cellGenerationProtocol = context.insertProtocol(...
         'Cock-eyed Prep', ...
-        '1) Mount fly in holder, pull off legs, pull scutellum back; 2) Glue scutellum; 3) Front - rotate head 90 deg, glue in place; 4) Back - glue around head, keep arista free; 5) Front - glue face to prevent leakage; 6) Score around and remove eye, remove fat/tissue; 7) Desheath directly above (lateral to) antennal nerve');
+        '1) Mount fly in holder, pull off front legs, pull scutellum back; 2) Glue scutellum; 3) Front - rotate head 90 deg, glue in place; 4) Back - glue around head, keep arista free; 5) Front - glue face to prevent leakage; 6) Back - Add External; 7) Back - Score around and remove eye, remove fat/tissue; 8) Desheath directly above (lateral to) antennal nerve');
+    cellGenerationProtocol.getName
+    cellGenerationProtocol.getProtocolDocument
+
 end
 
+cellGenerationProtocol = context.getProtocol('Naked Brain Prep');
+if(isempty(cellGenerationProtocol))
+    cellGenerationProtocol = context.insertProtocol(...
+        'Naked Brain Prep', ...
+        '??');
+    cellGenerationProtocol.getName
+    cellGenerationProtocol.getProtocolDocument
+end
 
 
 %%
@@ -68,6 +94,9 @@ for celld = 1:length(celldirs) % loop over cells
     % contribute to results, i.e. experiments can contribute to multiple
     % results/analyses.
     experiment = project.insertExperiment(experimentPurpose, datetime(dv(1),dv(2),dv(3),dv(4),dv(5),dv(6)));
+    
+    
+    
     
     flySource = context.getObjectWithURI('ovation://9dc60a32-65bc-4ff5-8df5-70acc8e73761/');
         % cellSource.getLabel % cell
@@ -182,7 +211,17 @@ piezoSineEpoch.insertNumericMeasurement(name,...
 % TA: woah!  This didn't work!  cause a bunch of errors
 
 
+<<<<<<< HEAD
 %% deleting
 toDelete = context.getObjectWithURI('ovation://6f145bc3-9802-448f-83af-b0430948ffe2/');
 
 
+=======
+%% Clean up options
+
+if 1
+toDelete = context.getObjectWithURI('ovation://7beb6df5-a2fc-4925-983d-393c3d0cf2ba/');
+% context.trash(toDelete);
+context.trash(toDelete).get();
+end
+>>>>>>> ovation import

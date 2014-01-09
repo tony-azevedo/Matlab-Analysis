@@ -76,13 +76,3 @@ for f = 1:length(rawfs)
     
 end
 
-
-
-% currentSineProtocol = context.getProtocol('CurrentSine');
-% if(isempty(currentSineProtocol))
-%     currentSineProtocol = context.insertProtocol('CurrentSine', 'Inject current sine wave',...
-%         'CurrentSine',...
-%         'https://github.com/tony-azevedo/FlySound/',...
-%         'e5f0b4bc7fa1445f41e19d60f6a3f92dd04d455f');
-% end
-% end
