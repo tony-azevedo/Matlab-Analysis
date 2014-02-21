@@ -20,6 +20,9 @@ context = NewDataContext('anthony_azevedo@hms.harvard.edu');
 % project = context.insertProject('AMMC-B1 neurons - 5', 'Function, connectivity, mechanisms of sound encoding in B1 neurons', datetime(2013,4,3,8,0,0));
 % project = context.getObjectWithURI('ovation://d4610f7d-67a8-40d4-88c0-a06f25a724aa/'); 
 
+% project = context.insertProject('AMMC-B1 neurons - 6', 'Function, connectivity, mechanisms of sound encoding in B1 neurons', datetime(2013,4,3,8,0,0));
+%project = context.getObjectWithURI('ovation://2f421b30-31c3-4b51-b112-5b9dc4116619/'); 
+
 project = context.insertProject('AMMC-B1 neurons - 7', 'Function, connectivity, mechanisms of sound encoding in B1 neurons', datetime(2013,4,3,8,0,0));
 %project = context.getObjectWithURI('ovation://2f421b30-31c3-4b51-b112-5b9dc4116619/'); 
 
