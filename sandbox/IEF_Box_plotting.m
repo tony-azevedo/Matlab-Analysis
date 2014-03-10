@@ -42,6 +42,9 @@ wt_group_5min = {
 
 %%
 stm_counts_0min = [
+    0       0       0       0       0   
+    0       0       0       0       0   
+    0       0       0       0       0   
     0.028	0.0066	0.1217	0.1137	0.0215
     0.0696	0.1369	0.3476	0.2041	0.1088
     0.2783	0.3296	0.3582	0.2246	0.2231
@@ -49,6 +52,9 @@ stm_counts_0min = [
     ];
 
 stm_group_0min = {
+    '6P' '6P' '6P' '6P' '6P' 
+    '5P' '5P' '5P' '5P' '5P' 
+    '4P' '4P' '4P' '4P' '4P' 
     '3P' '3P' '3P' '3P'  '3P' 
     '2P' '2P' '2P' '2P'  '2P' 
     '1P' '1P' '1P' '1P' '1P' 
@@ -57,6 +63,9 @@ stm_group_0min = {
 
 %%
 stm_counts_5min = [...
+    0       0
+    0       0
+    0       0
     0.01674	0.0128
     0.06458	0.1482
     0.2478	0.3588
@@ -64,6 +73,9 @@ stm_counts_5min = [...
     ];
 
 stm_group_5min = {
+    '6P' '6P' 
+    '5P' '5P' 
+    '4P' '4P' 
     '3P' '3P'
     '2P' '2P'
     '1P' '1P'
@@ -72,12 +84,18 @@ stm_group_5min = {
 
 %%
 ttm_counts_0min = [...
+    0       0
+    0       0
+    0       0
     0.3164	0.4102
     0.4182	0.4553
     0.215	0.0722
     0.0504	0.0622];
 
 ttm_group_0min = {
+    '6P' '6P' 
+    '5P' '5P' 
+    '4P' '4P' 
     '3P' '3P' 
     '2P' '2P' 
     '1P' '1P' 
@@ -86,12 +104,18 @@ ttm_group_0min = {
 
 %%
 ttm_counts_5min = [
+    0       0
+    0       0
+    0       0
     0.291	0.2967
     0.3492	0.3821
     0.2527	0.185
     0.1071	0.1361];
 
 ttm_group_5min = {
+    '6P' '6P' 
+    '5P' '5P' 
+    '4P' '4P' 
     '3P' '3P' 
     '2P' '2P' 
     '1P' '1P' 
@@ -201,26 +225,38 @@ wt_counts = [wt_counts_0min,wt_counts_5min];
 wt_group = [wt_group_0min,wt_group_5min];
 
 wtax = subplot(3,1,1,'parent',boxfig);
-boxplot(wtax,flipud(wt_counts(:)),flipud(wt_group(:)),...
+boxplot(wtax,(wt_counts(:)),(wt_group(:)),...
     'plotstyle','compact',...
     'medianstyle','line')
 ylim([0 .8])
+ylabel('Rho/Rho_{Total}')
+box(wtax,'off'); set(wtax,'TickDir','out'); 
 
 stm_counts = [stm_counts_0min,stm_counts_5min];
 stm_group = [stm_group_0min,stm_group_5min];
 
 stmax = subplot(3,1,2,'parent',boxfig);
-boxplot(stmax,flipud(stm_counts(:)),flipud(stm_group(:)),...
+boxplot(stmax,(stm_counts(:)),(stm_group(:)),...
     'plotstyle','compact',...
-    'notch','on',...
     'medianstyle','line')
 ylim([0 .8])
+ylabel('Rho/Rho_{Total}')
+box(stmax,'off'); set(stmax,'TickDir','out'); 
 
 ttm_counts = [ttm_counts_0min,ttm_counts_5min];
 ttm_group = [ttm_group_0min,ttm_group_5min];
 
 ttmax = subplot(3,1,3,'parent',boxfig);
-boxplot(ttmax,flipud(ttm_counts(:)),flipud(ttm_group(:)),...
+boxplot(ttmax,(ttm_counts(:)),(ttm_group(:)),...
     'plotstyle','compact',...
     'medianstyle','line')
 ylim([0 .8])
+ylabel('Rho/Rho_{Total}')
+box(ttmax,'off'); set(ttmax,'TickDir','out'); 
+
+axs = get(boxfig, 'children');
+set(axs,'fontsize',14,'Fontname','Arial')
+
+set(findall(boxfig,'type','text'),'fontsize',18,'Fontname','Arial')
+
+export_fig IEFBox.pdf -transparent
