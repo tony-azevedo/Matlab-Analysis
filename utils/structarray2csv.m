@@ -59,10 +59,11 @@ for rr = 1:t
         str = '';
         
         if isnumeric(c)
-            if isempty(c), break, end
-            str = num2str(c(1));
-            for i_ind = 2:numel(c)
-                str = [str,'/',num2str(c(i_ind),10)];
+            if numel(c) >0
+                str = num2str(c(1));
+                for i_ind = 2:numel(c)
+                    str = [str,'/',num2str(c(i_ind),10)];
+                end
             end
         elseif islogical(c)
             str = num2str(c(1));
