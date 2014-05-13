@@ -71,7 +71,7 @@ for rr = 1:t
                 str = [str,'/',num2str(c(i_ind),10)];
             end
         elseif ischar(c)
-            str = c;
+            str = deblank(c);
         elseif iscell(c)
             c = c(:)';
             if isempty(c)
@@ -84,7 +84,7 @@ for rr = 1:t
                     elseif islogical(c{i_ind})
                         str = [str,'/',num2str(c{i_ind},10)];
                     elseif ischar(c{i_ind})
-                        str = [str,'/',c{i_ind}];
+                        str = [str,'/',regexprep(deblank(c{i_ind}),',','_')];
                     end
                 end    
                 str = str(2:end);  % leading slash
@@ -93,6 +93,7 @@ for rr = 1:t
         l = [l,str,','];
     end
     l = l(1:end-1); % trailing comma
+    l = regexprep(l,'\\','\\\');
     fprintf(FID,l);
     fprintf(FID,'\n');
 end
