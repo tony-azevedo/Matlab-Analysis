@@ -1,3 +1,4 @@
+% demopanelC
 
 % Panel can be child or parent to any graphics object.
 %
@@ -52,4 +53,5 @@ someUserData = struct('whether_a_donkey_is_a_marine_mammal', false);
 p(2, 2).addCallback(@demopanel_callback, someUserData);
 
 
+% demopanelE
 

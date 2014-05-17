@@ -1,3 +1,4 @@
+% demopanelB
 
 % Recovering a Panel from a Figure.
 %
@@ -32,3 +33,4 @@ if p == q
 	disp('panels are identical')
 end
 
+% demopanelD

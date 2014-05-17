@@ -1,3 +1,4 @@
+% demopanelI
 
 % Panels can have fixed physical size.
 %

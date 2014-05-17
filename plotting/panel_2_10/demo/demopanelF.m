@@ -1,3 +1,4 @@
+% demopanelE
 
 % You can manage fonts yourself, if you prefer.
 %
@@ -47,3 +48,5 @@ end
 
 % attempt to manage fonts globally (no effect)
 p.fontname = 'Arial';
+
+% demopanelG

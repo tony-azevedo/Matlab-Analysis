@@ -1,3 +1,4 @@
+% demopanelA
 
 % Panel can incorporate an existing axis.
 %
@@ -40,3 +41,4 @@ p(2).select(h_colorbar_axis);
 
 
 
+% demopanelC

@@ -1,3 +1,4 @@
+% demopanelF
 
 % One panel can manage multiple axes/graphics objects.
 %
@@ -48,3 +49,5 @@ set(ax2, 'XTickLabel', OppTickLabels, 'YTickLabel', OppTickLabels);
 
 % hand both axes to panel for position management
 p(2,2).select([ax1 ax2]);
+
+% demopanelH

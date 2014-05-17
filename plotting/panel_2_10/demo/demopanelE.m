@@ -1,3 +1,4 @@
+% demopanelD
 
 % You can have as many Panels as you like in one Figure.
 %
@@ -66,6 +67,7 @@ pause(3)
 % finally, let's delete the first one, just for the craic.
 delete(p);
 
+% demopanelF
 
 
 

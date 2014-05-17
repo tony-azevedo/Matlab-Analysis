@@ -1,3 +1,4 @@
+% demopanelG
 
 % You can create an "inset" plot effect.
 %
@@ -36,3 +37,4 @@ p.select('data');
 set(p(2, 2).axis, 'xtick', [], 'ytick', []);
 
 
+% demopanelI
