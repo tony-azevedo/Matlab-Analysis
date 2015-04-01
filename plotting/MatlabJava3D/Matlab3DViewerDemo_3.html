@@ -1,0 +1,190 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MATLAB 3D viewer demo 3</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-08-13"><meta name="DC.source" content="Matlab3DViewerDemo_3.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>MATLAB 3D viewer demo 3</h1><!--introduction--><p>In this demo file, we will use the surface plot mode of the 3D viewer. It is a mode of rendering where a 3D surface mesh is created from a 2D image. Here, the pixel intensity of the 2D image is interpreted as the elevation (Z coordinates), which is enough to generate the 3D surface.</p><p>It is a mode which is particularly useful for images that have indeed a pixel intensity that can be interpreted as elevation, such as maps. Here, we try to use the surface plot mode of the 3D viewer with a surface well known to MATLAB users.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Make sure Java3D is installed</a></li><li><a href="#2">Generate elevation data in MATLAB</a></li><li><a href="#5">Send data to the 3D viewer, through miji</a></li></ul></div><h2>Make sure Java3D is installed<a name="1"></a></h2><p>If not, try to install it</p><pre class="codeinput"><span class="keyword">if</span> ~IsJava3DInstalled(true)
+    <span class="keyword">return</span>
+<span class="keyword">end</span>
+</pre><h2>Generate elevation data in MATLAB<a name="2"></a></h2><p>This is the well known <b>membrane</b> dataset, that serves as a generator for the MATLAB logo.</p><p>This will generate a 51*51 image, for which intensity should be interpreted as height. It is not a 3D data per se, but its rendering will be.</p><pre class="codeinput">Z = membrane(1,25);
+</pre><p>The trouble is that Z is made of doubles, the most common MATLAB type, whether the 3D viewer only accepts 8-bit images. So we have do some conversion before rendering it. The following commands will stretch the range of Z to [0; 255] and cast to <tt>uint8</tt>.</p><pre class="codeinput">Imin = min(Z(:));
+Imax = max(Z(:));
+I = uint8( 200 * (Z-Imin) / (Imax-Imin) );
+</pre><h2>Send data to the 3D viewer, through miji<a name="5"></a></h2><pre>Launch Miji</pre><pre class="codeinput">Miji(false);
+</pre><p>We create an ImagePlus from the 2D image.</p><pre class="codeinput">imp = MIJ.createImage(<span class="string">'MATLAB peaks'</span>, I, false);
+</pre><p>Create and display a new 3D universe.</p><pre class="codeinput">universe = ij3d.Image3DUniverse();
+universe.show();
+</pre><p>Feed it the previous ImagePlus, but render it as a surface plot, where the intensity is encoded as height in a 3D space.</p><pre class="codeinput">color = javax.vecmath.Color3f(240 / 255, 120 / 255, 20 / 255);
+c = universe.addSurfacePlot(imp, <span class="keyword">...</span>
+        javax.vecmath.Color3f(), <span class="keyword">...</span>
+        <span class="string">'Matlab Peak in 3D'</span>, <span class="keyword">...</span>
+        1, <span class="keyword">...</span>
+        [true true true], <span class="keyword">...</span>
+        1);
+</pre><pre class="codeoutput">nFrames = 1
+</pre><p>Rotate it a little, so that it shows the same orientation that of the actual MATLAB logo.</p><pre class="codeinput">universe.resetView();
+c.setColor(color);
+c.setTransform([1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]);
+universe.fireContentChanged(c);
+universe.centerSelected(c);
+universe.rotateUniverse(javax.vecmath.Vector3d(-1, -0.5, +0.2), +120 * pi / 180);
+</pre><p>Et voil&agrave;! A beautiful monochrome MATLAB logo, rendered in an accelerated 3D viewer. You can try the <i>Fullscreen</i> option in the <i>View</i> menu, to maximize your experience.</p><p>Note that it is monochrome: the MATLAB logo (type <tt>logo</tt> in the command window) has two colors: the close side is yellow-orange-ish and the back face is blueish. If you look at the <tt>logo.m</tt> code, you will see that MATLAB guys generated these colors using 2 different light source of 2 different colors, which you cannot do in the 3D viewer.</p><p><img vspace="5" hspace="5" src="MatlabLogoInFiji.png" alt=""> </p><p><i>Jean-Yves Tinevez \&lt;jeanyves.tinevez at gmail.com\&gt;</i></p><p><i>Johannes Schindelin \&lt;johannes.schindelin@gmx.de\&gt;</i></p><p><i>- August 2011</i></p><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% MATLAB 3D viewer demo 3
+%
+% In this demo file, we will use the surface plot mode of the 3D viewer. It
+% is a mode of rendering where a 3D surface mesh is created from a 2D
+% image. Here, the pixel intensity of the 2D image is interpreted as the
+% elevation (Z coordinates), which is enough to generate the 3D surface.
+% 
+% It is a mode which is particularly useful for images that have indeed a
+% pixel intensity that can be interpreted as elevation, such as maps. Here,
+% we try to use the surface plot mode of the 3D viewer with a surface well
+% known to MATLAB users.
+
+
+%% Make sure Java3D is installed
+% If not, try to install it
+
+if ~IsJava3DInstalled(true)
+    return
+end
+
+%% Generate elevation data in MATLAB
+% This is the well known *membrane* dataset, that serves as a generator for
+% the MATLAB logo.
+
+%%
+% This will generate a 51*51 image, for which intensity should be
+% interpreted as height. It is not a 3D data per se, but its rendering will
+% be. 
+Z = membrane(1,25);
+
+%%
+% The trouble is that Z is made of doubles, the most common MATLAB type,
+% whether the 3D viewer only accepts 8-bit images. So we have do some
+% conversion before rendering it. The following commands will stretch the
+% range of Z to [0; 255] and cast to |uint8|.
+Imin = min(Z(:));
+Imax = max(Z(:));
+I = uint8( 200 * (Z-Imin) / (Imax-Imin) );
+
+%% Send data to the 3D viewer, through miji
+%  Launch Miji
+Miji(false);
+
+%%
+% We create an ImagePlus from the 2D image.
+imp = MIJ.createImage('MATLAB peaks', I, false);
+
+%%
+% Create and display a new 3D universe.
+universe = ij3d.Image3DUniverse();
+universe.show();
+
+%%
+% Feed it the previous ImagePlus, but render it as a surface plot, where
+% the intensity is encoded as height in a 3D space.
+color = javax.vecmath.Color3f(240 / 255, 120 / 255, 20 / 255);
+c = universe.addSurfacePlot(imp, ...
+        javax.vecmath.Color3f(), ...
+        'Matlab Peak in 3D', ...
+        1, ...
+        [true true true], ...
+        1);
+
+%%
+% Rotate it a little, so that it shows the same orientation that of the
+% actual MATLAB logo.
+universe.resetView();
+c.setColor(color);
+c.setTransform([1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]);
+universe.fireContentChanged(c);
+universe.centerSelected(c);
+universe.rotateUniverse(javax.vecmath.Vector3d(-1, -0.5, +0.2), +120 * pi / 180);
+
+%%
+% Et voilà! A beautiful monochrome MATLAB logo, rendered in an accelerated
+% 3D viewer. You can try the _Fullscreen_ option in the _View_ menu, to
+% maximize your experience.
+%
+%%
+% Note that it is monochrome: the MATLAB logo (type |logo| in the command
+% window) has two colors: the close side is yellow-orange-ish and the back
+% face is blueish. If you look at the |logo.m| code, you will see that
+% MATLAB guys generated these colors using 2 different light source of 2
+% different colors, which you cannot do in the 3D viewer.
+%%
+% 
+% <<MatlabLogoInFiji.png>>
+%
+%%
+%
+% _Jean-Yves Tinevez \<jeanyves.tinevez at gmail.com\>_
+%
+% _Johannes Schindelin \<johannes.schindelin@gmx.de\>_
+%
+% _- August 2011_
+ 
+##### SOURCE END #####
+--></body></html>

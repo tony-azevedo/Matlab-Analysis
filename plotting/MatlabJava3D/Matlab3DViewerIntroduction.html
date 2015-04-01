@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>How to install Fiji, and make MATLAB aware of it.</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-08-13"><meta name="DC.source" content="Matlab3DViewerIntroduction.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>How to install Fiji, and make MATLAB aware of it.</h1><!--introduction--><p>ImageJ is an image processing software, very popular in the Life-Science field. If you are a master student, a PhD or a postdoc in Biology, there is a very good chance that ImageJ is installed on your computer.</p><p><b>ImageJ</b> is developed mainly by Wayne Rasband, and is written in Java (see <a href="http://rsb.info.nih.gov/ij/index.html)">http://rsb.info.nih.gov/ij/index.html)</a>. It has a clever plugin system that allows users to extend it with new functionalities.</p><p><b>Fiji</b> (Fiji is Just ImageJ, <a href="http://fiji.sc/">http://fiji.sc/</a>) is a <i>distribution</i> of ImageJ, that includes (amongst other things) a lot of plugins, some useful libraries and an updater to keep everything up to date.</p><p>Amongst other things, it is made to facilitate inter-operability with other softwares. For instance, it offers scripting facilities using popular languages such as Python, Ruby, Clojure, Beanshell, Javascript, etc. It also ships with <b>Miji</b>, a set of utilities made to ease its interaction with MATLAB. Since ImageJ is written in Java, it can be called directly from within MATLAB, and be used as a supporting image visualization, processing or analysis tool.</p><p>In this demo bundle, we demonstrate how to use Fiji to get a very nice, hardware accelerated, 3D viewer in MATLAB.</p><p>This is not a totally trivial example, as it requires to have the Java libraries for accelerated 3D rendering installed for the MATLAB Java Virtual Machine. Fortunately, Fiji comes with a script that automates the process.</p><p>But you still have to install Fiji.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Installing Fiji</a></li><li><a href="#2">Making MATLAB aware of Fiji</a></li><li><a href="#3">Installing the Java3D libraries</a></li><li><a href="#4">What now?</a></li><li><a href="#5">Authors</a></li><li><a href="#6">Version history</a></li></ul></div><h2>Installing Fiji<a name="1"></a></h2><p>Simply go to <a href="http://fiji.sc/Downloads">http://fiji.sc/Downloads</a> and download the binaries for your OS. You will not find an installer; you just have to unzip the Fiji folder to somewhere convenient for you.</p><p>For demonstration purposes, let us assume you have a PC machine that runs a 64-bit version of Windows. You then have downloaded the matching Fiji version (fiji-win64-something.zip), and unzipped it in <tt>C:\Program Files\</tt> and now have a folder called <tt>C:\Program Files\Fiji.app</tt>.</p><p>Before launching MATLAB, launch Fiji itself. You will find an executable in the Fiji folder that you just need to run. At startup, Fiji should offer you to go to the <b>updater</b>. Do that and run the update. If you are not proposed this, you can find the updater in the <i>Help &gt; Update Fiji</i> menu item.</p><p>Close Fiji when the update is done.</p><p>A side note: ImageJ and its plugin are very useful if you are interested in scientific Image Processing. There are a zillion things you can do with it. If you are interested in using Fiji as a standalone application, check some of the tutorials there: <a href="http://fiji.sc/Documentation">http://fiji.sc/Documentation</a>.</p><h2>Making MATLAB aware of Fiji<a name="2"></a></h2><p>The utilities for interaction with MATLAB can all be accessed by adding a single folder to the MATLAB path. They are all located in the <tt>scripts</tt> folder of the Fiji folder.</p><p>So, if you have installed Fiji in <tt>C:\Program Files\Fiji.app</tt>, you just have to add <tt>C:\Program Files\Fiji.app\scripts</tt> to the MATLAB path, and that's all.</p><p>By the way, it is in this folder that you will find all the m-files of this demo bundle. So you can launch the demos listed below simply by typing their name in MATLAB command window; they will be found since they are on the path.</p><h2>Installing the Java3D libraries<a name="3"></a></h2><p>You are done with the main installation part. You just have to do it once, and if some updates are made to Fiji, you just have to launch its updater to get them.</p><p>You still have to install the <b>Java3D</b> libraries. Fortunately, this is done automatically with a Fiji script:</p><div><ul><li>Launch MATLAB;</li><li>type <tt>InstallJava3D</tt> in the command window.</li></ul></div><p>If you get a message stating that the function cannot be performed, this is because you did not add the Fiji <tt>scripts</tt> folder to the MATLAB path. in that case, go back to the previous paragraph.</p><p>The <tt>InstallJava3D</tt> will tell you what it does verbosely. It will check whether your Java Virtual Machine already has Java3D installed, and if the version requirement is met. If not, it will automatically download Java 3D and install it to the right folder.</p><p>There might be some issues if you do not have write permission to the target folder. In that case, the script will tell you what folder to make writable. Then you can simply re-launch the script.</p><p>Once you are done, you have to restart MATLAB, so that the new libraries are sourced.</p><h2>What now?<a name="4"></a></h2><p>You are all set.</p><p>You can now play with the 2 demo files <tt>Matlab3DViewerDemo_1.m</tt> and <tt>Matlab3DViewerDemo_2.m</tt>, that are heavily annotated and published in the same folder as this file.</p><div><ul><li><a href="Matlab3DViewerDemo_1.html">Matlab3DViewerDemo_1</a> shows how to load a 3D data set in MATLAB and render it in 3D (volumetric rendering);</li><li><a href="Matlab3DViewerDemo_2.html">Matlab3DViewerDemo_2</a> shows how to create simple object volumes in MATLAB and make a surface rendering of them.</li><li><a href="Matlab3DViewerDemo_3.html">Matlab3DViewerDemo_3</a> demonstrates the surface plot mode. A 2D image is used to generate a 3D surface, where pixel intensity is interpreted as elevation.</li></ul></div><p><b>MIJ</b> is the low level Java class that contains static methods to exchange data between MATLAB and ImageJ. You can find its documentation there: <a href="http://bigwww.epfl.ch/sage/soft/mij/">http://bigwww.epfl.ch/sage/soft/mij/</a></p><p><b>Miji</b> is the glue that facilitates the use of all these components. It is described in the aforementioned demo files.</p><h2>Authors<a name="5"></a></h2><div><ul><li>ImageJ is written by Wayne Rasband and friends for the core and the plugins;</li><li>Fiji is written by a bunch of enthusiasts, under the holy auspices of Johannes Schindelin and friends;</li><li>The ImageJ 3D viewer is written by Benjamin Schmid, Mark Longair, Albert Cardona and Johannes Schindelin;</li><li>MIJ is written by Daniel Sage and Dimiter Prodanov;</li><li>Miji is written by Johannes Schindelin, Jacques P&eacute;cr&eacute;aux and Jean-Yves Tinevez.</li></ul></div><p>It's all open source, feel free to modify, distribute, comment or whatever you feel like.</p><h2>Version history<a name="6"></a></h2><div><ul><li>26 Jul 2011: Initial release</li><li>4 Aug 2011: Fix a bug in write permission detection on Windows platform, thanks to report by Peter Beemiller</li><li>11 Aug 2011: Added a 3rd demo, demonstrating the surface plot of 2D image, thanks to the fix on the 3D viewer applied today by Johannes Schindelin.</li></ul></div><p><i>Jean-Yves Tinevez \&lt;jeanyves.tinevez at gmail.com\&gt; - July 2011</i></p><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% How to install Fiji, and make MATLAB aware of it.
+%
+% ImageJ is an image processing software, very popular in the Life-Science
+% field. If you are a master student, a PhD or a postdoc in Biology, there
+% is a very good chance that ImageJ is installed on your computer.
+%
+% *ImageJ* is developed mainly by Wayne Rasband, and is written in Java
+% (see http://rsb.info.nih.gov/ij/index.html). It has a clever plugin
+% system that allows users to extend it with new functionalities.
+%
+% *Fiji* (Fiji is Just ImageJ, http://fiji.sc/) is a _distribution_ of
+% ImageJ, that includes (amongst other things) a lot of plugins, some
+% useful libraries and an updater to keep everything up to date.
+%
+% Amongst other things, it is made to facilitate inter-operability with
+% other softwares. For instance, it offers scripting facilities using
+% popular languages such as Python, Ruby, Clojure, Beanshell, Javascript,
+% etc. It also ships with *Miji*, a set of utilities made to ease its
+% interaction with MATLAB. Since ImageJ is written in Java, it can be
+% called directly from within MATLAB, and be used as a supporting image
+% visualization, processing or analysis tool.
+%
+% In this demo bundle, we demonstrate how to use Fiji to get a very nice,
+% hardware accelerated, 3D viewer in MATLAB.
+%
+% This is not a totally trivial example, as it requires to have the Java
+% libraries for accelerated 3D rendering installed for the MATLAB Java
+% Virtual Machine. Fortunately, Fiji comes with a script that automates
+% the process.
+%
+% But you still have to install Fiji.
+
+%% Installing Fiji
+%
+% Simply go to http://fiji.sc/Downloads and download the binaries for your
+% OS. You will not find an installer; you just have to unzip the Fiji
+% folder to somewhere convenient for you.
+%
+% For demonstration purposes, let us assume you have a PC machine that
+% runs a 64-bit version of Windows. You then have downloaded the matching
+% Fiji version (fiji-win64-something.zip), and unzipped it in |C:\Program
+% Files\| and now have a folder called |C:\Program Files\Fiji.app|.
+%
+% Before launching MATLAB, launch Fiji itself. You will find an executable
+% in the Fiji folder that you just need to run. At startup, Fiji should
+% offer you to go to the *updater*. Do that and run the update. If you are
+% not proposed this, you can find the updater in the _Help > Update Fiji_
+% menu item.
+%
+% Close Fiji when the update is done.
+%
+% A side note: ImageJ and its plugin are very useful if you are interested
+% in scientific Image Processing. There are a zillion things you can do
+% with it. If you are interested in using Fiji as a standalone
+% application, check some of the tutorials there:
+% http://fiji.sc/Documentation.
+%
+%% Making MATLAB aware of Fiji
+%
+% The utilities for interaction with MATLAB can all be accessed by adding a
+% single folder to the MATLAB path. They are all located in the |scripts|
+% folder of the Fiji folder.
+%
+% So, if you have installed Fiji in |C:\Program Files\Fiji.app|, you just
+% have to add |C:\Program Files\Fiji.app\scripts| to the MATLAB path, and
+% that's all.
+% 
+% By the way, it is in this folder that you will find all the m-files of
+% this demo bundle. So you can launch the demos listed below simply by
+% typing their name in MATLAB command window; they will be found since they
+% are on the path.
+
+%% Installing the Java3D libraries
+%
+% You are done with the main installation part. You just have to do it
+% once, and if some updates are made to Fiji, you just have to launch its
+% updater to get them.
+%
+% You still have to install the *Java3D* libraries. Fortunately, this is
+% done automatically with a Fiji script:
+%
+% * Launch MATLAB;
+% * type |InstallJava3D| in the command window.
+%
+% If you get a message stating that the function cannot be performed, this
+% is because you did not add the Fiji |scripts| folder to the MATLAB path.
+% in that case, go back to the previous paragraph.
+%
+% The |InstallJava3D| will tell you what it does verbosely. It will check
+% whether your Java Virtual Machine already has Java3D installed, and if
+% the version requirement is met. If not, it will automatically download
+% Java 3D and install it to the right folder.
+%
+% There might be some issues if you do not have write permission to the
+% target folder. In that case, the script will tell you what folder to make
+% writable. Then you can simply re-launch the script.
+%
+% Once you are done, you have to restart MATLAB, so that the new libraries
+% are sourced.
+%
+%% What now?
+%
+% You are all set.
+%
+% You can now play with the 2 demo files |Matlab3DViewerDemo_1.m| and
+% |Matlab3DViewerDemo_2.m|, that are heavily annotated and published in
+% the same folder as this file.
+%
+% * <Matlab3DViewerDemo_1.html Matlab3DViewerDemo_1> shows how to load a 3D
+% data set in MATLAB and render it in 3D (volumetric rendering);
+% * <Matlab3DViewerDemo_2.html Matlab3DViewerDemo_2> shows how to create
+% simple object volumes in MATLAB and make a surface rendering of them.
+% * <Matlab3DViewerDemo_3.html Matlab3DViewerDemo_3> demonstrates the
+% surface plot mode. A 2D image is used to generate a 3D surface, where
+% pixel intensity is interpreted as elevation.
+%
+% *MIJ* is the low level Java class that contains static methods to
+% exchange data between MATLAB and ImageJ. You can find its documentation
+% there: http://bigwww.epfl.ch/sage/soft/mij/
+%
+% *Miji* is the glue that facilitates the use of all these components. It
+% is described in the aforementioned demo files.
+%
+%% Authors
+%
+% * ImageJ is written by Wayne Rasband and friends for the core and the
+% plugins;
+% * Fiji is written by a bunch of enthusiasts, under the holy auspices of
+% Johannes Schindelin and friends;
+% * The ImageJ 3D viewer is written by Benjamin Schmid, Mark Longair,
+% Albert Cardona and Johannes Schindelin;
+% * MIJ is written by Daniel Sage and Dimiter Prodanov;
+% * Miji is written by Johannes Schindelin, Jacques Pécréaux and Jean-Yves
+% Tinevez.
+%
+% It's all open source, feel free to modify, distribute, comment or
+% whatever you feel like.
+%
+%% Version history
+%
+% * 26 Jul 2011: Initial release
+% * 4 Aug 2011: Fix a bug in write permission detection on Windows
+% platform, thanks to report by Peter Beemiller
+% * 11 Aug 2011: Added a 3rd demo, demonstrating the surface plot of 2D
+% image, thanks to the fix on the 3D viewer applied today by Johannes
+% Schindelin.
+% 
+%
+%%
+%
+% _Jean-Yves Tinevez \<jeanyves.tinevez at gmail.com\> - July 2011_
+
+##### SOURCE END #####
+--></body></html>

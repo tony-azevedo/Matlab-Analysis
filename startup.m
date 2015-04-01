@@ -10,4 +10,7 @@ if ispref('AcquisitionPrefs')
 %     rmpref('AcquisitionPrefs')
 end
 
+javaaddpath 'C:\Program Files (x86)\MATLAB\R2013b\java\jar\ij-1.49g.jar'
+javaaddpath 'C:\Program Files (x86)\MATLAB\R2013b\java\jar\ij-1.49g.jar'
+
 cd C:\Users\Anthony' Azevedo'\Acquisition\

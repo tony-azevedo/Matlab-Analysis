@@ -10,4 +10,4 @@ function [fit] = exponentialToBaseline(coef, x)
 %
 % Help added by TA 02/22/09
 
-fit = coef(2) .* exp(-x .* coef(1));
+fit = coef(2) .* exp(-x .* coef(3));

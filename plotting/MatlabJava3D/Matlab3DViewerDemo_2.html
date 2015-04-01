@@ -1,0 +1,247 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MATLAB 3D viewer demo 2</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-08-13"><meta name="DC.source" content="Matlab3DViewerDemo_2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>MATLAB 3D viewer demo 2</h1><!--introduction--><p>In this example, we will demonstrate the surface rendering capabilities of the 3D viewer.</p><p>Rather than using an existing dataset, we will create a dummy one, in the shape of multiple balls or octahedrons. The balls will be created one by one, from a volume where all pixels are 0, but within the object volume, whose location and size is set randomly. From this volume, we ask the 3D viewer to create an iso-surface (one for each object), and to display it in the 3D universe, with a random color.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Make sure Java3D is installed</a></li></ul></div><h2>Make sure Java3D is installed<a name="1"></a></h2><p>If not, try to install it</p><pre class="codeinput"><span class="keyword">if</span> ~IsJava3DInstalled(true)
+    <span class="keyword">return</span>
+<span class="keyword">end</span>
+</pre><p>Let us define the size of our target image volume. Not too big to save memory.</p><pre class="codeinput">width = 128;
+height = 128;
+depth = 64;
+</pre><p>Here we determine how many objects we want, and their mean size. We will generate them randomly.</p><pre class="codeinput">nballs = 10;
+radius = 20;
+</pre><p>We pre-allocate the image volume.</p><pre class="codeinput">I = zeros(width, height, depth, <span class="string">'uint8'</span>);
+</pre><p>To simplify the object creation step, we create the grid containing each pixel coordinates.</p><pre class="codeinput">[X, Y, Z] = meshgrid(1:width, 1:height, 1:depth);
+</pre><p>Since we want to add the objects in live mode, we need to create and show the universe before creating and adding the balls. So we call Miji first,</p><pre class="codeinput">Miji(false)
+</pre><p>Then deal with the 3D universe.</p><pre class="codeinput">universe = ij3d.Image3DUniverse();
+universe.show();
+</pre><p>Now add the objects one by one, in a loop.</p><pre class="codeinput"><span class="keyword">for</span> i = 1 : nballs
+</pre><p>Determine the ball center and radius randomly.</p><pre class="codeinput">    x = round( width * rand );
+    y = round( height * rand );
+    z = round( depth * rand );
+    r = round( radius * (1 + randn/2) );
+    intensity = 255;
+</pre><p>Logical indexing: we find the pixel indices that are within the object's volume.</p><pre class="codeinput">    <span class="comment">% This gives you a ball</span>
+    <span class="comment">% index = (X-x).^2 + (Y-y).^2 + (Z-z).^2 &lt; r^2;</span>
+
+    <span class="comment">% This gives you an octaedron</span>
+    index = abs(X-x) + abs(Y-y) + abs(Z-z) &lt; r;
+</pre><p>Then we set the intensity of these pixels to 'intensity' (here, 255) and the value of pixels outside the object volume to 0.</p><pre class="codeinput">    I(~index) = 0;
+    I(index) = intensity;
+</pre><p>We now export this MATLAB volume to a new ImagePlus image, without displaying it.</p><pre class="codeinput">    imp = MIJ.createImage([<span class="string">'Ball '</span> int2str(i)], I, false);
+</pre><p>It is possible to specify the color of the iso-surface at creation, but the 3D viewer expects a <tt>Color3f</tt> object, which is part of the <tt>javax.vecmath package</tt>. We determine its actual color randomly again.</p><pre class="codeinput">    color = javax.vecmath.Color3f(rand, rand, rand);
+</pre><p>Finally, we add the object to the 3D universe, in the shape of an iso-surface. Arguments meaning is detailed below.</p><pre class="codeinput">    c = universe.addMesh(imp, <span class="keyword">...</span><span class="comment">          - this is the source ImagePlus</span>
+        color, <span class="keyword">...</span><span class="comment">                         - this is the destination color</span>
+        [<span class="string">'Ball '</span> int2str(i)], <span class="keyword">...</span><span class="comment">          - the name of the iso-surface</span>
+        1, <span class="keyword">...</span><span class="comment">                             - the threshold, see below</span>
+        [true true true], <span class="keyword">...</span><span class="comment">              - what channels to display</span>
+        1 <span class="keyword">...</span><span class="comment">                              - the resampling factor</span>
+        );
+</pre><p>Ok, so the meanings of the <tt>imp</tt>, <tt>color</tt> and <tt>name</tt> arguments are trivial. The <tt>threshold</tt> value, here set to 1, is important for this display mode.</p><p>Isosurface rendering uses the fast marching cube algorithm, which assumes that there is a threshold that separates the background from the foreground. In our case, it is easy to determine, since pixels out of the ball have a 0 intensity, and inside the ball they have an intensity of 255. So any threshold value between these two numbers would have worked.</p><p>The array containing the 3 boolean values is used to specify what channels will be included in the surface rendering, if you feed it a color image. In our case, we simply set them all to true and do not care much. Finally, the resampling factor is used to win some time and memory at the expense of precision. If set to more than 1, the image is downsampled before the marching cube algorithm is applied, resulting in less meshes obtained in smaller time.</p><p>Now, this individual step is going to take some time, so it is very likely that you see each ball appearing one by one. That is because computing the surface mesh is expensive, so the rendering lags a bit behind the command.</p><pre class="codeinput"><span class="keyword">end</span>
+</pre><p>That's it. Note that some of our objects might be clipped because they cross the boundaries of the volume we defined in the variable <tt>I</tt>.</p><p><img vspace="5" hspace="5" src="octahedrons-rendering.png" alt=""> </p><p><i>Jean-Yves Tinevez \&lt;jeanyves.tinevez at gmail.com\&gt; - July 2011</i></p><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% MATLAB 3D viewer demo 2
+%
+% In this example, we will demonstrate the surface rendering capabilities
+% of the 3D viewer.
+%
+% Rather than using an existing dataset, we will create a dummy one, in the
+% shape of multiple balls or octahedrons. The balls will be created one by
+% one, from a volume where all pixels are 0, but within the object volume,
+% whose location and size is set randomly. From this volume, we ask the 3D
+% viewer to create an iso-surface (one for each object), and to display it
+% in the 3D universe, with a random color.
+
+%% Make sure Java3D is installed
+% If not, try to install it
+
+if ~IsJava3DInstalled(true)
+    return
+end
+
+%%
+% Let us define the size of our target image volume. Not too big to save
+% memory.
+width = 128;
+height = 128;
+depth = 64;
+
+%%
+% Here we determine how many objects we want, and their mean size. We will
+% generate them randomly.
+nballs = 10;
+radius = 20;
+
+%%
+% We pre-allocate the image volume.
+I = zeros(width, height, depth, 'uint8');
+
+%%
+% To simplify the object creation step, we create the grid containing each
+% pixel coordinates.
+[X, Y, Z] = meshgrid(1:width, 1:height, 1:depth);
+
+%%
+% Since we want to add the objects in live mode, we need to create and show
+% the universe before creating and adding the balls. So we call Miji first,
+Miji(false)
+
+%%
+% Then deal with the 3D universe.
+universe = ij3d.Image3DUniverse();
+universe.show();
+
+%%
+% Now add the objects one by one, in a loop.
+for i = 1 : nballs
+
+    %%
+    % Determine the ball center and radius randomly.
+    x = round( width * rand );
+    y = round( height * rand );
+    z = round( depth * rand );
+    r = round( radius * (1 + randn/2) );
+    intensity = 255;
+
+    %%
+    % Logical indexing: we find the pixel indices that are within the
+    % object's volume.
+
+    % This gives you a ball
+    % index = (X-x).^2 + (Y-y).^2 + (Z-z).^2 < r^2;
+
+    % This gives you an octaedron
+    index = abs(X-x) + abs(Y-y) + abs(Z-z) < r;
+
+    %%
+    % Then we set the intensity of these pixels to 'intensity' (here, 255)
+    % and the value of pixels outside the object volume to 0.
+    I(~index) = 0;
+    I(index) = intensity;
+
+    %%
+    % We now export this MATLAB volume to a new ImagePlus image, without
+    % displaying it.
+    imp = MIJ.createImage(['Ball ' int2str(i)], I, false);
+
+    %%
+    % It is possible to specify the color of the iso-surface at creation,
+    % but the 3D viewer expects a |Color3f| object, which is part of the
+    % |javax.vecmath package|. We determine its actual color randomly
+    % again.
+    color = javax.vecmath.Color3f(rand, rand, rand);
+
+    %%
+    % Finally, we add the object to the 3D universe, in the shape of an
+    % iso-surface. Arguments meaning is detailed below.
+    c = universe.addMesh(imp, ...          - this is the source ImagePlus
+        color, ...                         - this is the destination color
+        ['Ball ' int2str(i)], ...          - the name of the iso-surface
+        1, ...                             - the threshold, see below
+        [true true true], ...              - what channels to display
+        1 ...                              - the resampling factor
+        );
+
+    %%
+    % Ok, so the meanings of the |imp|, |color| and |name| arguments are
+    % trivial. The |threshold| value, here set to 1, is important for this
+    % display mode.
+    %
+    % Isosurface rendering uses the fast marching cube algorithm, which
+    % assumes that there is a threshold that separates the background from
+    % the foreground. In our case, it is easy to determine, since pixels
+    % out of the ball have a 0 intensity, and inside the ball they have an
+    % intensity of 255. So any threshold value between these two numbers
+    % would have worked.
+    %
+    % The array containing the 3 boolean values is used to specify what
+    % channels will be included in the surface rendering, if you feed it a
+    % color image. In our case, we simply set them all to true and do not
+    % care much. Finally, the resampling factor is used to win some time
+    % and memory at the expense of precision. If set to more than 1, the
+    % image is downsampled before the marching cube algorithm is applied,
+    % resulting in less meshes obtained in smaller time.
+
+    %%
+    % Now, this individual step is going to take some time, so it is very
+    % likely that you see each ball appearing one by one. That is because
+    % computing the surface mesh is expensive, so the rendering lags a bit
+    % behind the command.
+
+end
+
+%%
+% That's it. Note that some of our objects might be clipped because they
+% cross the boundaries of the volume we defined in the variable |I|.
+%
+%
+%
+% <<octahedrons-rendering.png>>
+%%
+%
+% _Jean-Yves Tinevez \<jeanyves.tinevez at gmail.com\> - July 2011_
+
+
+##### SOURCE END #####
+--></body></html>
