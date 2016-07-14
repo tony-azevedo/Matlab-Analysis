@@ -18,7 +18,7 @@ function systemsound(string)
 dir= 'C:\Windows\Media\';
 string= lower(string);
 
-try [y,fs]= wavread(sprintf('%s%s',dir,string));
+try [y,fs]= audioread(sprintf('%s%s.wav',dir,string));
 catch
     try [y,fs]= wavread(sprintf('%swindows %s',dir,string));
     catch, error('Invalid selection.')
