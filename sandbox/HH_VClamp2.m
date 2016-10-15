@@ -16,7 +16,7 @@
 %    n = activation variable for K-current.
 %    t = the time axis of the simulation (useful for plotting).
 
-function [V,m,h,n,T] = HH0(I,T,varargin)
+function [V,m,h,n,T] = HH_VClamp2(I,T,varargin)
 
 dt = 0.01; % ms (dt = 0.01ms)
 if length(T) == 1
@@ -53,12 +53,18 @@ h(1)= p.Results.h0;
 n(1)= p.Results.n0;
 
 for i=1:length(T)-1
-    V(i+1) = V(i) + dt*(gNa*m(i)^3*h(i)*(ENa-(V(i)+65)) + gK*n(i)^4*(EK-(V(i)+65)) + gL*(ERest-(V(i)+65)) + I(i));
+    V(i+1) = V(1);
     m(i+1) = m(i) + dt*(alphaM(V(i))*(1-m(i)) - betaM(V(i))*m(i));
     h(i+1) = h(i) + dt*(alphaH(V(i))*(1-h(i)) - betaH(V(i))*h(i));
     n(i+1) = n(i) + dt*(alphaN(V(i))*(1-n(i)) - betaN(V(i))*n(i));
 end
 
+if isnan(m(end)) || isnan(h(end)) || isnan(n(end))
+    keyboard
+    figure(1);
+    plot(T,[m,h,n])
+
+end
 end
 
 %Below, define the AUXILIARY FUNCTIONS alpha & beta for each gating variable.

@@ -1,7 +1,7 @@
 % Playing with HH model
 
 %% allow neuron to settle
-[V,m0,h0,n0,t] = HH0(0,500);
+[V,m0,h0,n0,t] = HH0(0,50);
 figure(1);
 plot(t,V);
 V0 = V(end);
@@ -10,6 +10,49 @@ V0 = V(end);
 [V,~,~,~,~] = HH0(0,t,'V0',V0,'m0',m0(end),'h0',h0(end),'n0',n0(end));
 figure(1);
 plot(t,V);
+
+
+%% plot m,h and m^3*h at steady state
+[V,m0,h0,n0,t] = HH0(0,50);
+figure(1);
+plot(t,V);
+V0 = V(end);
+
+
+V_hold = (-110:1:20)+.1
+m = nan(size(V_hold));
+h = nan(size(V_hold));
+n = nan(size(V_hold));
+
+[V,m0,h0,n0,t] = HH0(I(1),t,'V0',V0,'m0',m0(end),'h0',h0(end),'n0',n0(end));
+[V,m0,h0,n0,t] = HH0(I(1),t,'V0',V0,'m0',m0(end),'h0',h0(end),'n0',n0(end));
+
+m(1) = m0(end);
+h(1) = h0(end);
+n(1) = n0(end);
+
+[V,m0,h0,n0,t] = HH_VClamp2(0,t,'V0',V_hold(1),'m0',m(1),'h0',h(1),'n0',n(1));
+m(1) = m0(end);
+h(1) = h0(end);
+n(1) = n0(end);
+
+for i = 2:length(V_hold);
+    i
+    [V,m0,h0,n0,t] = HH_VClamp2(0,t,'V0',V_hold(i),'m0',m(i-1),'h0',h(i-1),'n0',n(i-1));
+    figure(1);
+    plot(t,[m0,h0,n0])
+    drawnow
+    m(i-1)
+    h(i-1)
+        
+    m(i) = m0(end);
+    h(i) = h0(end);
+    n(i) = n0(end);
+end
+
+figure(1);
+% plot(V_hold,[m;h;n;m.^3.*h/max(m.^3.*h)]);
+plot(V_hold,[m.^3;h;m.^3.*h/max(m.^3.*h)]);
 
 %% Inject steady
 I = zeros(size(t));
