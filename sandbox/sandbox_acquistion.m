@@ -1,5 +1,5 @@
 %% Video
-clear all, close all, imaqreset
+clear all, close all, imaqreset, a = instrfind, delete(a), clear a
 
 root = 'C:\Users\tony\fly_movement_videos';
 folders = dir(root);
@@ -31,9 +31,9 @@ stoppreview(vid)
 sampratein = 50000;
 samprateout = 50000;
 
-stimonset = 1;                                  % time before stim on (seconds)
-stimdur = .1;
-stimpost = .1;                                  % time after stim offset (seconds)
+stimonset = 2;                                  % time before stim on (seconds)
+stimdur = 1;
+stimpost = 7;                                  % time after stim offset (seconds)
 dur = stimonset+stimdur+stimpost;
 
 stim_on_samp = floor(stimonset*samprateout)+1;
@@ -69,17 +69,24 @@ s.Rate = samprateout;
 % 
 % s.addTriggerConnection('Dev1/PFI0','External','StartTrigger')
 
+%% 
+obj = NewsutterMP285('COM4');
+updatePanel(obj);
+[stepMult, currentVelocity, vScaleFactor] = getStatus(obj);
+xyz_um = getPosition(obj);
+setOrigin(obj);
+a = instrfind;
 
 %%
 
-N = 10;
+N = 1;
 current = nan(length(stim),N);
 exptimes = current;
 chi = nan(size(1:N));
 yps = nan(size(1:N));
 
 diskLogger = VideoWriter([this_folder '\' this_file '_'  '.avi'], 'Grayscale AVI');
-
+addlistener(s,'DataAvailable',
 for n = 1:N
     fprintf('Trial %d\n',n)
         
@@ -91,7 +98,14 @@ for n = 1:N
     fprintf('Vid on: %s. Triggers: %d. Executed: %d. Frames acquired: %d\n',vid.Running,vid.TriggerRepeat+1,vid.TriggersExecuted,vid.FramesAcquired)
     
     s.queueOutputData([stim(:) triggerstim(:)]);
-    x = s.startForeground;
+    s.startBackground;
+    
+    setVelocity(obj, 500, 10)
+    pause(1)
+    moveTime = moveTo(obj,[0;100;0]);
+    pause(1)
+    moveTime = moveTo(obj,[0;-100;0]);
+    
     wait(s)
 %     wait(vid)
     
@@ -404,3 +418,30 @@ end
 %     voltage = x(:,3); voltage = voltage';
 % end
 
+%% Video
+clear all, close all, imaqreset, a = instrfind, delete(a), clear a
+
+root = 'C:\Users\tony\fly_movement_videos';
+folders = dir(root);
+this_file = folders(length(folders)).name;
+this_folder = [root '\' this_file];
+
+% configure and start imaq
+vid = videoinput('pointgrey', 1, 'F7_Raw8_1280x1024_Mode0');
+src = getselectedsource(vid);
+
+% Setup source and pulses etc
+triggerconfig(vid, 'hardware', 'risingEdge', 'externalTriggerMode0-Source0');
+vid.TriggerRepeat = 0;
+vid.FramesPerTrigger = 1;
+vid.LoggingMode = 'disk&memory';
+
+% Strobe stuff
+src.Strobe1 = 'On'; %% turn this on at the last minute
+src.Strobe1Polarity = 'High';
+set(src,'FrameRate','60')
+
+preview(vid)
+
+%%
+stoppreview(vid)

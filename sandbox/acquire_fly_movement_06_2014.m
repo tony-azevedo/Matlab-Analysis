@@ -27,6 +27,7 @@ this_folder = [root '\' this_file];
 
 %% configure and start imaq
 % imaqtool;
+% imaqhwinfo
 vid = videoinput('pointgrey', 2, 'Mono8_640x480');
 src = getselectedsource(vid);
 src.Strobe1 = 'On';
