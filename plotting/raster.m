@@ -1,4 +1,16 @@
 function ticks = raster(ax,x,y_point,varargin)
+% ticks = raster(ax,x,y_point)
+% Plots a spike raster at spike times x, with y points [y1,y2] on axis ax.
+% Returns an object array, ticks, of handles to the raster points.
+% 
+% ticks = raster(ax,x,y_point,YLIMS)
+% Optional input YLIMS sets the ax.YLim property.
+% 
+% example usage: 
+% rasterfig = figure;
+% ax = subplot(1,1,1,'parent',rasterfig)
+% ticks = raster(ax,spiketimes,[-.5 .5],[-2 2]);
+% set(ticks,'linewidth',.5,'color',[1 0 1]);
 
 if isempty(x)
     ticks = [];
